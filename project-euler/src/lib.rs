@@ -30,3 +30,47 @@ pub fn problem_2(ceil: i32) -> i32 {
 
     sum
 }
+
+pub fn problem_3(n: i64) -> i64 {
+    if is_prime(n) {
+        return n;
+    }
+    fn is_prime(p: i64) -> bool {
+        if p < 2 {
+            false
+        } else {
+            let mut d = 2;
+
+            while d * d <= p {
+                if p % d == 0 {
+                    return false;
+                }
+                d += 1;
+            }
+            true
+        }
+    }
+
+    fn get_next_prime(p: i64) -> i64 {
+        let mut c = p + 1;
+        while !is_prime(c) {
+            c += 1;
+        }
+        c
+    }
+
+    fn rec(candidate: i64, number: i64) -> i64 {
+        if number % candidate == 0 {
+            let next_number = number / candidate;
+            if is_prime(next_number) {
+                return next_number;
+            }
+            rec(candidate, next_number)
+        } else {
+            let next_candidate = get_next_prime(candidate);
+            rec(next_candidate, number)
+        }
+    }
+
+    rec(2, n)
+}
