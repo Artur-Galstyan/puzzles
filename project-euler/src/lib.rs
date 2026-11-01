@@ -74,3 +74,39 @@ pub fn problem_3(n: i64) -> i64 {
 
     rec(2, n)
 }
+
+pub fn problem_4() -> i64 {
+    fn is_palindrome(i: i64) -> bool {
+        let s = i.to_string();
+
+        let middle = s.len().div_euclid(2);
+        let mut n = 0;
+
+        while n < middle {
+            let left = s.chars().nth(n);
+            let right = s.chars().nth(s.len() - n - 1);
+            if left != right {
+                return false;
+            } else {
+                n += 1;
+            }
+        }
+
+        true
+    }
+
+    let mut largest = 0;
+
+    for a in (100..1000).rev() {
+        for b in (a..1000).rev() {
+            let c = a * b;
+            if c <= largest {
+                break;
+            }
+            if c > largest && is_palindrome(c) {
+                largest = c;
+            }
+        }
+    }
+    largest
+}

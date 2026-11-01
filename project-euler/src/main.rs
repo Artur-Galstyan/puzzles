@@ -1,6 +1,6 @@
-use project_euler::problem_3;
+use project_euler::problem_4;
 
 fn main() {
-    let solution = problem_3(600851475143);
+    let solution = problem_4();
     println!("solution={}", solution);
 }
