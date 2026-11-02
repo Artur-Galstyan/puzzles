@@ -1,3 +1,48 @@
+use std::collections::HashSet;
+
+fn is_palindrome(i: i64) -> bool {
+    let s = i.to_string();
+
+    let middle = s.len().div_euclid(2);
+    let mut n = 0;
+
+    while n < middle {
+        let left = s.chars().nth(n);
+        let right = s.chars().nth(s.len() - n - 1);
+        if left != right {
+            return false;
+        } else {
+            n += 1;
+        }
+    }
+
+    true
+}
+
+fn is_prime(p: i64) -> bool {
+    if p < 2 {
+        false
+    } else {
+        let mut d = 2;
+
+        while d * d <= p {
+            if p % d == 0 {
+                return false;
+            }
+            d += 1;
+        }
+        true
+    }
+}
+
+fn get_next_prime(p: i64) -> i64 {
+    let mut c = p + 1;
+    while !is_prime(c) {
+        c += 1;
+    }
+    c
+}
+
 pub fn problem_1(divisors: Vec<i32>, k: i32) -> i32 {
     fn sum_divisible_by(n: i32, k: i32) -> i32 {
         let ceil: i32 = (k - 1).div_euclid(n);
@@ -35,29 +80,6 @@ pub fn problem_3(n: i64) -> i64 {
     if is_prime(n) {
         return n;
     }
-    fn is_prime(p: i64) -> bool {
-        if p < 2 {
-            false
-        } else {
-            let mut d = 2;
-
-            while d * d <= p {
-                if p % d == 0 {
-                    return false;
-                }
-                d += 1;
-            }
-            true
-        }
-    }
-
-    fn get_next_prime(p: i64) -> i64 {
-        let mut c = p + 1;
-        while !is_prime(c) {
-            c += 1;
-        }
-        c
-    }
 
     fn rec(candidate: i64, number: i64) -> i64 {
         if number % candidate == 0 {
@@ -76,25 +98,6 @@ pub fn problem_3(n: i64) -> i64 {
 }
 
 pub fn problem_4() -> i64 {
-    fn is_palindrome(i: i64) -> bool {
-        let s = i.to_string();
-
-        let middle = s.len().div_euclid(2);
-        let mut n = 0;
-
-        while n < middle {
-            let left = s.chars().nth(n);
-            let right = s.chars().nth(s.len() - n - 1);
-            if left != right {
-                return false;
-            } else {
-                n += 1;
-            }
-        }
-
-        true
-    }
-
     let mut largest = 0;
 
     for a in (100..1000).rev() {
@@ -109,4 +112,40 @@ pub fn problem_4() -> i64 {
         }
     }
     largest
+}
+
+pub fn problem_5(n: i64) -> i64 {
+    let mut nums_to_check = HashSet::new();
+    (1..=n).into_iter().for_each(|i| {
+        nums_to_check.insert(i);
+    });
+
+    for i in (1..=n).rev() {
+        if !nums_to_check.contains(&i) {
+            continue;
+        }
+        for j in (1..=i - 1).rev() {
+            if !nums_to_check.contains(&j) {
+                continue;
+            }
+            if i % j == 0 {
+                nums_to_check.remove(&j);
+            }
+        }
+    }
+
+    let mut c = n;
+    loop {
+        let mut found = true;
+        for i in &nums_to_check {
+            if c % i != 0 {
+                found = false;
+                break;
+            }
+        }
+        if found {
+            return c;
+        }
+        c += n;
+    }
 }
