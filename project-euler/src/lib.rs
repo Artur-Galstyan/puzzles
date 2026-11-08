@@ -193,3 +193,22 @@ pub fn problem_8(n: i64) -> i64 {
 
     highest_prod
 }
+
+pub fn problem_9(n: i64) -> i64 {
+    for c in 0..=1000i64 {
+        let c_squared = c.pow(2);
+
+        for b in (0..c - 1i64).rev() {
+            let b_squared = b.pow(2);
+
+            for a in 0..b {
+                let a_squared = a.pow(2);
+
+                if a_squared + b_squared == c_squared && a + b + c == n {
+                    return a * b * c;
+                }
+            }
+        }
+    }
+    -1
+}
