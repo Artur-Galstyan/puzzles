@@ -1,6 +1,7 @@
 use std::{
     cmp::max,
     collections::{HashMap, HashSet},
+    vec,
 };
 
 // medium
@@ -108,5 +109,68 @@ pub fn problem_104() {
         }
 
         dfs(root, 0)
+    }
+}
+
+// medium
+pub fn problem_200() {
+    pub fn num_islands(grid: Vec<Vec<char>>) -> i32 {
+        let mut grid = grid.clone();
+        let n_cols = grid[0].len();
+
+        grid.insert(0, vec!['0'; n_cols]);
+        grid.push(vec!['0'; n_cols]);
+
+        for row in &mut grid {
+            row.insert(0, '0');
+            row.push('0');
+        }
+
+        let mut island_counter = 0;
+        let mut visited: HashSet<(usize, usize)> = HashSet::new();
+
+        for (i, row) in grid.iter().enumerate() {
+            for (j, col) in row.iter().enumerate() {
+                if *col == '0' {
+                    continue;
+                } else {
+                    if visited.contains(&(i, j)) {
+                        continue;
+                    } else {
+                        island_counter += 1;
+                        traverse(i, j, &mut visited, &grid);
+                    }
+                }
+            }
+        }
+
+        fn get_neighbor_deltas(x: usize, y: usize) -> Vec<(usize, usize)> {
+            let upper = (x, y - 1);
+            let lower = (x, y + 1);
+            let right = (x + 1, y);
+            let left = (x - 1, y);
+
+            vec![upper, lower, right, left]
+        }
+
+        fn traverse(
+            x: usize,
+            y: usize,
+            visited: &mut HashSet<(usize, usize)>,
+            grid: &Vec<Vec<char>>,
+        ) {
+            visited.insert((x, y));
+            let neighbors = get_neighbor_deltas(x, y);
+            for neighbor in neighbors {
+                let (n_x, n_y) = neighbor;
+                if grid[n_x][n_y] == '0' || visited.contains(&(n_x, n_y)) {
+                    continue;
+                } else {
+                    traverse(n_x, n_y, visited, grid);
+                }
+            }
+        }
+
+        island_counter
     }
 }
